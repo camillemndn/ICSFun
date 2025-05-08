@@ -11,8 +11,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
     compositions,
-    GGally,
-    ggplot2,
+    fda,
     ICS,
     ICSOutlier,
     memoise
@@ -31,7 +30,6 @@ Suggests:
     tidyverse
 VignetteBuilder: quarto
 Depends:
-    R (>= 3.5),
-    fda
+    R (>= 3.5)
 LazyData: true
 LazyDataCompression: bzip2
