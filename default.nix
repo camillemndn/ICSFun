@@ -138,9 +138,9 @@ rec {
   devShells.default = pkgs.mkShell {
     buildInputs = with pkgs; [
       (quarto.override {
-        extraRPackages = r-deps pkgs.rPackages ++ [ packages.x86_64-linux.ICSComplex ];
+        extraRPackages = r-deps pkgs.rPackages ++ [ packages.x86_64-linux.ICSFun ];
       })
-      (rWrapper.override { packages = r-deps pkgs.rPackages ++ [ packages.x86_64-linux.ICSComplex ]; })
+      (rWrapper.override { packages = r-deps pkgs.rPackages ++ [ packages.x86_64-linux.ICSFun ]; })
       texliveFull
       npins
     ];
@@ -186,10 +186,10 @@ rec {
       );
     in
     {
-      ICSComplex = pkgs.callPackage (
+      ICSFun = pkgs.callPackage (
         { rPackages, ... }:
         rPackages.buildRPackage {
-          name = "ICSComplex";
+          name = "ICSFun";
           src = builtins.fetchGit ./.;
           propagatedBuildInputs = r-import-deps rPackages;
         }
@@ -206,7 +206,7 @@ rec {
         }:
 
         stdenv.mkDerivation {
-          name = "ICSComplex-website";
+          name = "ICSFun-website";
           src = builtins.fetchGit ./.;
           buildInputs = [
             image_optim
@@ -228,7 +228,7 @@ rec {
     }
     // builtins.listToAttrs (
       map (file: rec {
-        name = "ICSComplex-vignette-" + builtins.elemAt (pkgs.lib.splitString "." file) 0;
+        name = "ICSFun-vignette-" + builtins.elemAt (pkgs.lib.splitString "." file) 0;
         value = pkgs.callPackage buildVignette { inherit file name; };
       }) vignettes
     );
