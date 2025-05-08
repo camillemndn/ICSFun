@@ -1,0 +1,36 @@
+Package: ICSComplex
+Title: Coordinate-free ICS for complex data
+Version: 0.0.0.9000
+Authors@R:
+    person("Camille", "Mondon", email = "camille.mondon@tse-fr.eu", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0007-4569-990X"))
+Description: Invariant Coordinate Selection, Functional data, Compositional data, Distributional data
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    GGally,
+    ggplot2,
+    ICS,
+    ICSOutlier,
+    memoise
+Suggests:
+    boot,
+    corrplot,
+    DeBoinR,
+    fdANOVA,
+    fda.usc,
+    fdaoutlier,
+    knitr,
+    MVN,
+    rmarkdown,
+    sf,
+    tf,
+    tidyverse
+VignetteBuilder: quarto
+Depends:
+    R (>= 3.5),
+    fda
+LazyData: true
+LazyDataCompression: bzip2
