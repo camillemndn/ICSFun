@@ -77,6 +77,7 @@ let
 
   r-import-deps =
     ps: with ps; [
+      compositions
       fda
       GGally
       ggplot2
