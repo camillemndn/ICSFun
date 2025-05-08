@@ -1,61 +1,72 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param ... PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if (interactive()) {
-#'   # EXAMPLE1
-#' }
-#' }
-#' @rdname ICS
+#' @noRd
 #' @export
 ICS <- function(...) UseMethod("ICS")
 
 #' @export
 ICS.default <- ICS::ICS
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param fdobj PARAM_DESCRIPTION
-#' @param ... PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if (interactive()) {
-#'   # EXAMPLE1
-#' }
-#' }
-#' @seealso
-#'  \code{\link[fda]{inprod}}, \code{\link[fda]{fd}}
-#'  \code{\link[ICS]{ICS-S3}}, \code{\link[ICS]{ics}}, \code{\link[ICS]{ICS}}
-#' @rdname ICS
-#' @export
-#' @importFrom fda inprod fd
+#' Invariant coordinate selection for Functional Data
+#'
+#' Applies Invariant coordinate selection (ICA) to functional data objects
+#' (\code{fd} objects from the \pkg{fda} package) using the \code{ICS} method.
+#'
+#' @param fdobj A functional data object of class \code{fd}.
+#' @param slow Logical; if \code{TRUE}, computes the Gram matrix using \code{gram()}.
+#'   If \code{FALSE} (default), uses \code{fda::inprod()} for efficiency.
+#' @param ... Additional arguments passed to the \code{ICS} function.
+#'
+#' @return An object of class \code{ICS} and \code{fd}, with fields:
+#'   \describe{
+#'     \item{\code{W}}{Unmixing matrix in coefficient space}
+#'     \item{\code{H}}{Basis functions (eigenfunctions)}
+#'     \item{\code{H_dual}}{Dual eigenbasis of functions}
+#'     \item{\code{scores}}{Scores of the components (inherited from \code{ICS})}
+#'   }
+#'
+#' @details
+#' The function projects the functional data into an approximately orthonormal Z-basis
+#' using a transformation matrix. ICA is performed on the transformed coefficients,
+#' and the results are projected back into function space as eigenfunctions.
+#'
+#' The dual eigenbasis \code{H_dual} corresponds to the basis of functions used to reconstruct the original data from the invariant coordinates.
+#' in the metric induced by the Gram matrix.
+#'
+#' @importFrom fda fd inprod
 #' @importFrom ICS ICS
-#' @import ICS
+#' @seealso \code{\link[fda]{fd}}, \code{\link[ICS]{ICS}}
+#'
+#' @export
 ICS.fd <- function(fdobj, slow = FALSE, ...) {
-  # Fix lack of orthonormality of the basis
-  changemat <- to_zbsplines(basis = fdobj$basis, inv = TRUE)
-  if (slow) {
-    gram <- t(changemat) %*% gram(fdobj$basis) %*% changemat
+  # Change of basis between B-splines and ZB-splines
+  change_mat <- to_zbsplines(basis = fdobj$basis, inv = TRUE)
+
+  # Compute Gram matrix of ZB-spline basis
+  gram <- if (slow) {
+    t(change_mat) %*% gram(fdobj$basis) %*% change_mat
   } else {
-    gram <- t(changemat) %*% fda::inprod(fdobj$basis, fdobj$basis) %*% changemat
+    t(change_mat) %*% fda::inprod(fdobj$basis, fdobj$basis) %*% change_mat
   }
-  # Multivariate ICS
-  icsobj <- ICS::ICS(crossprod(to_zbsplines(fdobj), gram), ...)
-  # Compute eigenobjects and their dual
+
+  # Get transformed coefficients in the ZB-spline basis
+  coef_z <- to_zbsplines(fdobj)
+
+  # Apply ICS on crossproduct of coefficients with Gram matrix
+  icsobj <- ICS::ICS(crossprod(coef_z, gram), ...)
+
+  # Extract unmixing matrix and compute eigenfunctions
   W <- icsobj$W
+  basis <- fdobj$basis
   icsobj$H <- fda::fd(
-    to_zbsplines(coefs = t(W), basis = fdobj$basis, inv = TRUE),
-    fdobj$basis
+    to_zbsplines(coefs = t(W), basis = basis, inv = TRUE),
+    basis
   )
+
+  # Compute dual eigenbasis for reconstruction
   icsobj$H_dual <- fda::fd(
-    to_zbsplines(coefs = solve(W %*% gram), basis = fdobj$basis, inv = TRUE),
-    fdobj$basis
+    to_zbsplines(coefs = solve(W %*% gram), basis = basis, inv = TRUE),
+    basis
   )
+
   class(icsobj) <- c("ICS", "fd")
-  icsobj
+  return(icsobj)
 }

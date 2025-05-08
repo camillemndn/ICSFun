@@ -18,3 +18,27 @@ gram <- memoise::memoise(function(bobj) {
   }
   result_matrix
 })
+
+to_zbsplines <- function(
+    fdobj = NULL,
+    coefs = fdobj$coefs, basis = fdobj$basis, inv = FALSE) {
+  rangeval <- basis$rangeval
+  knots <- basis$params
+  g <- length(knots)
+  p <- basis$nbasis
+  d <- p - g
+  a <- min(rangeval)
+  b <- max(rangeval)
+  extknots <- c(rep(a, d), knots, rep(b, d))
+
+  dinvmat <- diag(diff(extknots, lag = d)) / d
+  dmat <- solve(dinvmat)
+
+  kinvmat <- diag(p)[-p, ]
+  kinvmat[lower.tri(kinvmat)] <- 1
+  kmat <- diag(p)[, -p]
+  kmat[cbind(2:p, 1:(p - 1))] <- -1
+
+  changemat <- if (inv) dmat %*% kmat else kinvmat %*% dinvmat
+  if (is.null(coefs)) changemat else changemat %*% coefs
+}
