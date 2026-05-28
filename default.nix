@@ -1,5 +1,5 @@
 let
-  inputs = import ./deps;
+  inputs = import ./lon.nix;
   system = "x86_64-linux";
   pkgs = import inputs.nixpkgs {
     inherit system;
@@ -12,40 +12,21 @@ let
               src = pkgs.fetchFromGitHub {
                 owner = "jalvesaq";
                 repo = "colorout";
-                rev = "v1.3-2";
-                hash = "sha256-HBQRKqyYYAKJj2TFXBgX5Gc6EnkMG3ZaMCxuHVR9Cfc=";
+                rev = "v1.3-3";
+                hash = "sha256-1aWDrvW1+X5bxJEZlm3RLy8Urx6UlYX7BqJwNF2bNYA=";
               };
             };
 
-            pkgdown = buildRPackage {
-              name = "pkgdown";
+            pkgdown_offline = buildRPackage {
+              name = "pkgdown_offline";
               src = pkgs.fetchFromGitHub {
-                owner = "r-lib";
-                repo = "pkgdown";
-                rev = "v2.0.9";
-                hash = "sha256-2rmQxCC6GH6ZVqgifh4rXPHqOMKUPZD32gcnGFOeQPw=";
+                owner = "nanxstats";
+                repo = "pkgdown.offline";
+                rev = "v0.1.1";
+                hash = "sha256-zu16X/WbCTdrIv5GNOUQbWuqDWCrSHAII7uf8I+2Wdk=";
               };
               propagatedBuildInputs = [
-                bslib
-                callr
-                cli
-                desc
-                digest
-                downlit
-                fs
-                httr
-                jsonlite
-                magrittr
-                memoise
-                purrr
-                ragg
-                rlang
-                rmarkdown
-                tibble
-                whisker
-                withr
-                xml2
-                yaml
+                pkgdown
               ];
             };
 

@@ -1,0 +1,25 @@
+{
+  "version": "1",
+  "sources": {
+    "git-hooks": {
+      "type": "GitHub",
+      "fetchType": "tarball",
+      "owner": "cachix",
+      "repo": "git-hooks.nix",
+      "branch": "master",
+      "revision": "580633fa3fe5fc0379905986543fd7495481913d",
+      "url": "https://github.com/cachix/git-hooks.nix/archive/580633fa3fe5fc0379905986543fd7495481913d.tar.gz",
+      "hash": "sha256-8Psjt+TWvE4thRKktJsXfR6PA/fWWsZ04DVaY6PUhr4="
+    },
+    "nixpkgs": {
+      "type": "GitHub",
+      "fetchType": "tarball",
+      "owner": "NixOS",
+      "repo": "nixpkgs",
+      "branch": "nixos-unstable-small",
+      "revision": "2636ca0c159c2e5a6bfa92489938dc4e2ebc2b76",
+      "url": "https://github.com/NixOS/nixpkgs/archive/2636ca0c159c2e5a6bfa92489938dc4e2ebc2b76.tar.gz",
+      "hash": "sha256-Djchgl/U/iPZ7CEkh8TzQZ/4for5Eg+0TeZzhTkc/1w="
+    }
+  }
+}
