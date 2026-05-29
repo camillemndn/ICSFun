@@ -1,28 +1,73 @@
-#' @export
-mdist_simu_test <- memoise::memoise(ICSOutlier::dist_simu_test)
+.mdist_simu_test_memo <- memoise::memoise(ICSOutlier::dist_simu_test)
 
-#' @noRd
+#' Memoised version of [ICSOutlier::dist_simu_test()]
+#'
+#' A thin wrapper around [ICSOutlier::dist_simu_test()] that memoises results
+#' so repeated calls with identical arguments are returned from cache.
+#'
+#' @param ... Arguments passed to [ICSOutlier::dist_simu_test()].
+#' @return The value returned by [ICSOutlier::dist_simu_test()].
+#' @seealso [ICSOutlier::dist_simu_test()]
+#' @importFrom memoise memoise
 #' @export
-ICS_outlier <- function(...) UseMethod("ICS_outlier")
+mdist_simu_test <- function(...) .mdist_simu_test_memo(...)
+
+#' ICS outlier detection (generic)
+#'
+#' Generic dispatching on the class of `x`. The default method is
+#' [ICSOutlier::ICS_outlier()]; a method is provided for `fd` objects.
+#'
+#' @param x The input data.
+#' @param ... Additional arguments passed to methods.
+#' @return An object describing detected outliers (class depends on method).
+#' @seealso [ICSOutlier::ICS_outlier()], [ICS_outlier.fd()]
+#' @export
+ICS_outlier <- function(x, ...) UseMethod("ICS_outlier")
 
 #' @export
-ICS_outlier.default <- ICSOutlier::ICS_outlier
+#' @rdname ICS_outlier
+ICS_outlier.default <- function(x, ...) ICSOutlier::ICS_outlier(x, ...)
 
+#' ICS-based outlier detection for functional data
+#'
+#' Applies [ICS::ICS()] to functional data (objects of class `fd`) and
+#' performs outlier detection in the resulting invariant coordinates.
+#'
+#' @param x A functional data object of class `fd`.
+#' @param S1,S2 Scatter functionals.
+#' @param S1_args,S2_args Lists of extra arguments passed to `S1` and `S2`.
+#' @param ICS_algorithm Algorithm passed to [ICS::ICS()].
+#' @param index Optional integer vector of component indices to use.
+#' @param method Component-selection method: `"norm_test"` or `"simulation"`.
+#' @param test Normality test used when `method = "norm_test"`.
+#' @param n_eig Number of replications for normality-test based selection.
+#' @param level_test Significance level for component selection.
+#' @param adjust Logical; adjust for multiple testing.
+#' @param level_dist Significance level for the outlier cutoff.
+#' @param n_dist Number of replications used to compute the cutoff.
+#' @param type Type of selection; currently `"smallprop"`.
+#' @param n_cores,iseed,pkg,q_type Passed to [ICSOutlier::comp_simu_test()] /
+#'   [ICSOutlier::dist_simu_test()].
+#' @param ... Additional arguments passed to inner routines.
+#' @return An object of class `ICS_Out_fd`.
+#' @seealso [plot.ICS_Out_fd()], [ICSOutlier::ICS_outlier()]
+#' @method ICS_outlier fd
 #' @export
 #' @importFrom ggplot2 ggplot geom_point aes geom_line geom_hline ggplotGrob guides
 #' @importFrom GGally ggpairs ggmatrix_gtable
 ICS_outlier.fd <- function(
-    X, S1 = ICS::ICS_cov, S2 = ICS::ICS_cov4, S1_args = list(), S2_args = list(),
+    x, S1 = ICS::ICS_cov, S2 = ICS::ICS_cov4, S1_args = list(), S2_args = list(),
     ICS_algorithm = c("whiten", "standard", "QR"), index = NULL, method = "norm_test",
     test = "agostino.test", n_eig = 10000, level_test = 0.05,
     adjust = TRUE, level_dist = 0.025, n_dist = 10000, type = "smallprop",
     n_cores = NULL, iseed = NULL, pkg = "ICSOutlier", q_type = 7,
     ...) {
+  X <- x
   # Step 1: Checks and apply ICS if necessary
   algorithm <- match.arg(ICS_algorithm)
   method <- match.arg(method, c("norm_test", "simulation"))
   if (!(inherits(X, "fd"))) {
-    stop("'X' must be of class 'fd'")
+    stop("'x' must be of class 'fd'")
   }
   if (!is.function(S1)) {
     stop(paste("S1 must be specified as a function"))

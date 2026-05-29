@@ -1,16 +1,25 @@
-#' @noRd
+#' Invariant Coordinate Selection (generic)
+#'
+#' Generic dispatching on the class of `x`. The default method is
+#' [ICS::ICS()]; methods are provided for `fd` and `acomp` objects.
+#'
+#' @param x The input data. The default method forwards to [ICS::ICS()].
+#' @param ... Additional arguments passed to methods.
+#' @return An object of class `ICS`.
+#' @seealso [ICS::ICS()], [ICS.fd()], [ICS.acomp()]
 #' @export
-ICS <- function(...) UseMethod("ICS")
+ICS <- function(x, ...) UseMethod("ICS")
 
 #' @export
-ICS.default <- ICS::ICS
+#' @rdname ICS
+ICS.default <- function(x, ...) ICS::ICS(x, ...)
 
 #' Invariant coordinate selection for Functional Data
 #'
 #' Applies Invariant coordinate selection (ICA) to functional data objects
 #' (\code{fd} objects from the \pkg{fda} package) using the \code{ICS} method.
 #'
-#' @param fdobj A functional data object of class \code{fd}.
+#' @param x A functional data object of class \code{fd}.
 #' @param slow Logical; if \code{TRUE}, computes the Gram matrix using \code{gram()}.
 #'   If \code{FALSE} (default), uses \code{fda::inprod()} for efficiency.
 #' @param ... Additional arguments passed to the \code{ICS} function.
@@ -36,7 +45,8 @@ ICS.default <- ICS::ICS
 #' @seealso \code{\link[fda]{fd}}, \code{\link[ICS]{ICS}}
 #'
 #' @export
-ICS.fd <- function(fdobj, slow = FALSE, ...) {
+ICS.fd <- function(x, slow = FALSE, ...) {
+  fdobj <- x
   # Change of basis between B-splines and ZB-splines
   change_mat <- to_zbsplines(basis = fdobj$basis, inv = TRUE)
 

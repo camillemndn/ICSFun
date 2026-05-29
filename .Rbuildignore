@@ -1,0 +1,14 @@
+^\.claude$
+^\.envrc$
+^\.pre-commit-config\.yaml$
+^result$
+^default\.nix$
+^shell\.nix$
+^lon\.nix$
+^lon\.lock$
+^docs$
+^_pkgdown\.yml$
+^ICSFun\.Rcheck$
+^ICSFun_.*\.tar\.gz$
+^ICSComplex\.Rproj$
+^\.Rproj\.user$

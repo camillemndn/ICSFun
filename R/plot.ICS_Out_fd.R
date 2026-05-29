@@ -5,7 +5,7 @@
 #' eigenfunctions, IC distances with cutoff, pair plot of scores, and the
 #' raw functional data colored by outlier status.
 #'
-#' @param object An `ICS_Out_fd` object.
+#' @param x An `ICS_Out_fd` object.
 #' @param ... Additional aesthetic arguments forwarded to ggplot layers.
 #' @return Invisibly the combined `grid.arrange` grob; called for its side
 #'   effect of drawing plots.
@@ -14,7 +14,9 @@
 #' @importFrom ggplot2 ggplot aes geom_point geom_line geom_hline ggplotGrob
 #' @importFrom GGally ggpairs ggmatrix_gtable
 #' @importFrom gridExtra grid.arrange
-plot.ICS_Out_fd <- function(object, ...) {
+#' @importFrom rlang .data
+plot.ICS_Out_fd <- function(x, ...) {
+  object <- x
   X <- object$X
   IC_distances <- object$ics_distances
   n <- nrow(object$scores)

@@ -4,10 +4,10 @@
 \alias{ICS.fd}
 \title{Invariant coordinate selection for Functional Data}
 \usage{
-\method{ICS}{fd}(fdobj, slow = FALSE, ...)
+\method{ICS}{fd}(x, slow = FALSE, ...)
 }
 \arguments{
-\item{fdobj}{A functional data object of class \code{fd}.}
+\item{x}{A functional data object of class \code{fd}.}
 
 \item{slow}{Logical; if \code{TRUE}, computes the Gram matrix using \code{gram()}.
 If \code{FALSE} (default), uses \code{fda::inprod()} for efficiency.}

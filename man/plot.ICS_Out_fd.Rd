@@ -4,10 +4,10 @@
 \alias{plot.ICS_Out_fd}
 \title{Plot an ICS outlier-detection result for functional data}
 \usage{
-\method{plot}{ICS_Out_fd}(object, ...)
+\method{plot}{ICS_Out_fd}(x, ...)
 }
 \arguments{
-\item{object}{An \code{ICS_Out_fd} object.}
+\item{x}{An \code{ICS_Out_fd} object.}
 
 \item{...}{Additional aesthetic arguments forwarded to ggplot layers.}
 }
