@@ -12,6 +12,9 @@ RoxygenNote: 7.3.3
 Imports:
     compositions,
     fda,
+    GGally,
+    ggplot2,
+    gridExtra,
     ICS,
     ICSOutlier,
     memoise
