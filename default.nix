@@ -150,10 +150,6 @@ rec {
             cp -r vignettes $out
           '';
         };
-
-      vignettes = builtins.filter (file: builtins.match "^.*\\.(Rmd|qmd)$" file != null) (
-        builtins.attrNames (builtins.readDir ./vignettes)
-      );
     in
     {
       ICSFun = pkgs.callPackage (
@@ -195,13 +191,7 @@ rec {
           '';
         }
       ) { };
-    }
-    // builtins.listToAttrs (
-      map (file: rec {
-        name = "ICSFun-vignette-" + builtins.elemAt (pkgs.lib.splitString "." file) 0;
-        value = pkgs.callPackage buildVignette { inherit file name; };
-      }) vignettes
-    );
+    };
 
   checks.default = {
     inherit packages;
