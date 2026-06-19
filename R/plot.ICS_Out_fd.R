@@ -32,26 +32,38 @@ plot.ICS_Out_fd <- function(x, ...) {
     )
   )
   g1 <- ggplot2::ggplot(
-    screeplot_dat, ggplot2::aes(.data$IC, .data$gen_kurtosis)
+    screeplot_dat,
+    ggplot2::aes(.data$IC, .data$gen_kurtosis)
   ) +
     ggplot2::geom_line(alpha = 0.5) +
-    ggplot2::geom_point(ggplot2::aes(color = .data$selected, size = .data$selected))
+    ggplot2::geom_point(ggplot2::aes(
+      color = .data$selected,
+      size = .data$selected
+    ))
   plot(g1)
 
   # ---- Selected eigenfunctions ----
   eig_idx <- object$index
   eigenfun_list <- as.list(object$H_dual)[eig_idx]
-  rangeval <- range(vapply(eigenfun_list, function(f) f$basis$rangeval, numeric(2)))
+  rangeval <- range(vapply(
+    eigenfun_list,
+    function(f) f$basis$rangeval,
+    numeric(2)
+  ))
   grid <- seq(rangeval[1], rangeval[2], length.out = 401)
-  eig_long <- do.call(rbind, lapply(seq_along(eigenfun_list), function(k) {
-    data.frame(
-      x = grid,
-      y = as.numeric(fda::eval.fd(grid, eigenfun_list[[k]])),
-      IC = factor(eig_idx[k])
-    )
-  }))
+  eig_long <- do.call(
+    rbind,
+    lapply(seq_along(eigenfun_list), function(k) {
+      data.frame(
+        x = grid,
+        y = as.numeric(fda::eval.fd(grid, eigenfun_list[[k]])),
+        IC = factor(eig_idx[k])
+      )
+    })
+  )
   g2 <- ggplot2::ggplot(
-    eig_long, ggplot2::aes(.data$x, .data$y, color = .data$IC, group = .data$IC)
+    eig_long,
+    ggplot2::aes(.data$x, .data$y, color = .data$IC, group = .data$IC)
   ) +
     ggplot2::geom_line()
   if (inherits(X, "dd")) {
@@ -92,19 +104,25 @@ plot.ICS_Out_fd <- function(x, ...) {
     X_list <- as.list(X)
     rangeval_X <- X[[1]]$basis$rangeval
     grid_X <- seq(rangeval_X[1], rangeval_X[2], length.out = 401)
-    X_long <- do.call(rbind, lapply(seq_along(X_list), function(k) {
-      data.frame(
-        x = grid_X,
-        y = as.numeric(fda::eval.fd(grid_X, X_list[[k]])),
-        id = factor(k),
-        outlier = outlier_fact[k]
-      )
-    }))
+    X_long <- do.call(
+      rbind,
+      lapply(seq_along(X_list), function(k) {
+        data.frame(
+          x = grid_X,
+          y = as.numeric(fda::eval.fd(grid_X, X_list[[k]])),
+          id = factor(k),
+          outlier = outlier_fact[k]
+        )
+      })
+    )
     g4 <- ggplot2::ggplot(
       X_long,
       ggplot2::aes(
-        .data$x, .data$y,
-        group = .data$id, color = .data$outlier, alpha = .data$outlier
+        .data$x,
+        .data$y,
+        group = .data$id,
+        color = .data$outlier,
+        alpha = .data$outlier
       )
     ) +
       ggplot2::geom_line()

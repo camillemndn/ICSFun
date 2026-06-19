@@ -12,7 +12,8 @@ gram <- memoise::memoise(function(bobj) {
       })
       result_matrix[i, j] <- stats::integrate(
         element_function,
-        rval[1], rval[2]
+        rval[1],
+        rval[2]
       )$value
     }
   }
@@ -20,8 +21,11 @@ gram <- memoise::memoise(function(bobj) {
 })
 
 to_zbsplines <- function(
-    fdobj = NULL,
-    coefs = fdobj$coefs, basis = fdobj$basis, inv = FALSE) {
+  fdobj = NULL,
+  coefs = fdobj$coefs,
+  basis = fdobj$basis,
+  inv = FALSE
+) {
   rangeval <- basis$rangeval
   knots <- basis$params
   g <- length(knots)

@@ -28,8 +28,12 @@
 #' }
 #'
 #' @export
-ICS.acomp <- function(x, V = compositions::ilrBase(x),
-                      transf = c("alr", "ilr"), ...) {
+ICS.acomp <- function(
+  x,
+  V = compositions::ilrBase(x),
+  transf = c("alr", "ilr"),
+  ...
+) {
   # Match transformation argument
   transf <- match.arg(transf)
 
