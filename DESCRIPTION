@@ -1,6 +1,6 @@
 Package: ICSFun
 Title: Coordinate-Free ICS for Functional and Non-Functional Data
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R:
     person("Camille", "Mondon", email = "camille.mondon@tse-fr.eu", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0007-4569-990X"))
