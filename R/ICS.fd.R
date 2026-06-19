@@ -46,37 +46,41 @@ ICS.default <- function(x, ...) ICS::ICS(x, ...)
 #'
 #' @export
 ICS.fd <- function(x, slow = FALSE, ...) {
-  fdobj <- x
-  # Change of basis between B-splines and ZB-splines
-  change_mat <- to_zbsplines(basis = fdobj$basis, inv = TRUE)
+	fdobj <- x
+	# Change of basis between B-splines and ZB-splines
+	change_mat <- to_zbsplines(basis = fdobj$basis, inv = TRUE)
 
-  # Compute Gram matrix of ZB-spline basis
-  gram <- if (slow) {
-    t(change_mat) %*% gram(fdobj$basis) %*% change_mat
-  } else {
-    t(change_mat) %*% fda::inprod(fdobj$basis, fdobj$basis) %*% change_mat
-  }
+	# Compute Gram matrix of ZB-spline basis
+	gram <- if (slow) {
+		t(change_mat) %*% gram(fdobj$basis) %*% change_mat
+	} else {
+		t(change_mat) %*% fda::inprod(fdobj$basis, fdobj$basis) %*% change_mat
+	}
 
-  # Get transformed coefficients in the ZB-spline basis
-  coef_z <- to_zbsplines(fdobj)
+	# Get transformed coefficients in the ZB-spline basis
+	coef_z <- to_zbsplines(fdobj)
 
-  # Apply ICS on crossproduct of coefficients with Gram matrix
-  icsobj <- ICS::ICS(crossprod(coef_z, gram), ...)
+	# Apply ICS on crossproduct of coefficients with Gram matrix
+	icsobj <- ICS::ICS(crossprod(coef_z, gram), ...)
 
-  # Extract unmixing matrix and compute eigenfunctions
-  W <- icsobj$W
-  basis <- fdobj$basis
-  icsobj$H <- fda::fd(
-    to_zbsplines(coefs = t(W), basis = basis, inv = TRUE),
-    basis
-  )
+	# Extract unmixing matrix and compute eigenfunctions
+	W <- icsobj$W
+	basis <- fdobj$basis
+	icsobj$H <- fda::fd(
+		to_zbsplines(coefs = t(W), basis = basis, inv = TRUE),
+		basis
+	)
 
-  # Compute dual eigenbasis for reconstruction
-  icsobj$H_dual <- fda::fd(
-    to_zbsplines(coefs = solve(W %*% gram), basis = basis, inv = TRUE),
-    basis
-  )
+	# Compute dual eigenbasis for reconstruction
+	icsobj$H_dual <- fda::fd(
+		to_zbsplines(coefs = solve(W %*% gram), basis = basis, inv = TRUE),
+		basis
+	)
 
-  class(icsobj) <- c("ICS", "fd")
-  return(icsobj)
+	class(icsobj) <- c("ICS", "fd")
+	return(icsobj)
 }
+
+#' @export
+#' @rdname ICS.fd
+ICS.fdl <- function(x, ...) ICS(c(x), ...)

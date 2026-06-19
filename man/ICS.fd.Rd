@@ -2,9 +2,12 @@
 % Please edit documentation in R/ICS.fd.R
 \name{ICS.fd}
 \alias{ICS.fd}
+\alias{ICS.fdl}
 \title{Invariant coordinate selection for Functional Data}
 \usage{
 \method{ICS}{fd}(x, slow = FALSE, ...)
+
+\method{ICS}{fdl}(x, ...)
 }
 \arguments{
 \item{x}{A functional data object of class \code{fd}.}

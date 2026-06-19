@@ -2,6 +2,7 @@
 % Please edit documentation in R/ICS_outlier.fd.R
 \name{ICS_outlier.fd}
 \alias{ICS_outlier.fd}
+\alias{ICS_outlier.fdl}
 \title{ICS-based outlier detection for functional data}
 \usage{
 \method{ICS_outlier}{fd}(
@@ -26,6 +27,8 @@
   q_type = 7,
   ...
 )
+
+\method{ICS_outlier}{fdl}(x, ...)
 }
 \arguments{
 \item{x}{A functional data object of class \code{fd}.}
