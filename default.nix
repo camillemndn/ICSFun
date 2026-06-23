@@ -82,6 +82,7 @@ let
     r-suggest-deps ps
     ++ [
       devtools
+      pkgdown_offline
       svglite
     ];
 
@@ -182,7 +183,7 @@ rec {
           HOME = ".";
 
           buildPhase = ''
-            Rscript -e "options(pkgdown.internet = FALSE); pkgdown::build_site()"
+            Rscript -e "pkgdown.offline::build_site()"
             image_optim --recursive docs
           '';
 
